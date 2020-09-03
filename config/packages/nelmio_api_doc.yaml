@@ -1,0 +1,30 @@
+nelmio_api_doc:
+    areas:
+        path_patterns:
+            - ^/api/v1
+    documentation:
+        info:
+            title: Server
+            description: Backend for the server
+            version: 1.0.0
+        securityDefinitions:
+            password:
+                type: oauth2
+                description: provides a password flow access_token
+                flow: password
+                tokenUrl: /oauth/access_token
+                name: Authorization
+                scopes:
+                    info: Get user info
+            client_credentials:
+                type: oauth2
+                description: provides a accessCode flow access_token
+                flow: accessCode
+                authorizationUrl: /oauth/authorize
+                tokenUrl: /oauth/token
+                name: Authorization
+                scopes:
+                    info: Get user info
+            security:
+                - password: []
+                - client_credentials: []

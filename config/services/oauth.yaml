@@ -1,0 +1,64 @@
+services:
+    _defaults:
+        autowire: true
+
+    oauth.auth_code.ttl:
+        class: DateInterval
+        arguments: ['PT10M']
+        shared: false
+
+    oauth.refresh_token.ttl:
+        class: DateInterval
+        arguments: ['P1M']
+        shared: false
+
+    oauth.access_token.ttl:
+        class: DateInterval
+        arguments: ['PT1H']
+        shared: false
+
+    oauth.private_key:
+        class: League\OAuth2\Server\CryptKey
+        arguments:
+            $keyPath: 'file://%kernel.project_dir%/config/private.key'
+            $keyPermissionsCheck: false
+
+    # Grants
+    League\OAuth2\Server\Grant\AuthCodeGrant:
+        arguments:
+            $authCodeTTL: '@oauth.auth_code.ttl'
+        calls:
+            - { method: setRefreshTokenTTL, arguments: ['@oauth.refresh_token.ttl']}
+
+    League\OAuth2\Server\Grant\PasswordGrant:
+        calls:
+            - { method: setRefreshTokenTTL, arguments: ['@oauth.refresh_token.ttl']}
+
+    League\OAuth2\Server\Grant\RefreshTokenGrant:
+        calls:
+            - { method: setRefreshTokenTTL, arguments: ['@oauth.refresh_token.ttl']}
+
+    # Server
+    League\OAuth2\Server\AuthorizationServer:
+        arguments:
+            $privateKey: '@oauth.private_key'
+            $encryptionKey: '%env(OAUTH_ENCRYPTION_KEYS)%'
+        calls:
+            - { method: enableGrantType, arguments: ['@League\OAuth2\Server\Grant\AuthCodeGrant', '@oauth.access_token.ttl']}
+            - { method: enableGrantType, arguments: ['@League\OAuth2\Server\Grant\PasswordGrant', '@oauth.access_token.ttl']}
+            - { method: enableGrantType, arguments: ['@League\OAuth2\Server\Grant\RefreshTokenGrant', '@oauth.access_token.ttl']}
+
+    # Repositories
+    App\Security\Oauth\AccessTokenRepository: ~
+    App\Security\Oauth\AuthCodeRepository: ~
+    App\Security\Oauth\ClientRepository: ~
+    App\Security\Oauth\RefreshTokenRepository: ~
+    App\Security\Oauth\ScopeRepository: ~
+    App\Security\Oauth\UserRepository: ~
+
+    League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface: '@App\Security\Oauth\AccessTokenRepository'
+    League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface: '@App\Security\Oauth\AuthCodeRepository'
+    League\OAuth2\Server\Repositories\ClientRepositoryInterface: '@App\Security\Oauth\ClientRepository'
+    League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface: '@App\Security\Oauth\RefreshTokenRepository'
+    League\OAuth2\Server\Repositories\ScopeRepositoryInterface: '@App\Security\Oauth\ScopeRepository'
+    League\OAuth2\Server\Repositories\UserRepositoryInterface: '@App\Security\Oauth\UserRepository'

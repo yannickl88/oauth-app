@@ -1,0 +1,48 @@
+{% extends "layout.html.twig" %}
+
+{% block body_classes %}text-center{% endblock %}
+
+{% block styles %}
+    <style type="text/css">
+        html,
+        body {
+            height: 100%;
+        }
+        body {
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-align: center;
+            align-items: center;
+            padding-top: 40px;
+            padding-bottom: 40px;
+            background-color: #f5f5f5;
+        }
+        .form-signin {
+            width: 100%;
+            max-width: 330px;
+            padding: 15px;
+            margin: auto;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<form method="post" class="form-signin" novalidate>
+    {{ parent() }}
+
+    <p>
+        The application {{ auth_request.client.name }} want to have access to the following information:
+    </p>
+    <p>
+        <ul class="text-left">
+        {% for scope in auth_request.scopes %}
+            <li>{{ ('oauth.scope.' ~ scope.identifier) | trans }}</li>
+        {% endfor %}
+        </ul>
+    </p>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Approve</button>
+    <p class="mt-5 mb-3 text-muted">&copy; 2020</p>
+
+    {{ form_rest(form) }}
+</form>
+{% endblock %}

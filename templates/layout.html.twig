@@ -1,0 +1,25 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    {% block styles %}
+    {% endblock %}
+</head>
+<body class="{% block body_classes %}{% endblock %}">
+{% block body %}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endblock %}
+
+{% block scripts %}
+<script src="/js/jquery-3.4.1.min.js"></script>
+<script src="/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
+</body>
+</html>

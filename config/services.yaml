@@ -1,0 +1,23 @@
+imports:
+    - { resource: services/* }
+
+parameters:
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\:
+        resource: '../src/*'
+        exclude: '../src/{DependencyInjection,Orm,Repository,Kernel.php}'
+
+    App\Controller\:
+        resource: '../src/Controller'
+        tags: ['controller.service_arguments']
+
+    Nyholm\Psr7\Factory\Psr17Factory: ~
+    Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory: ~
+
+    # Interfaces
+    Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface: '@Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory'

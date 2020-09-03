@@ -1,0 +1,38 @@
+security:
+    providers:
+        app:
+            id: App\Security\AppUserProvider
+
+    encoders:
+        App\Security\AppUser:
+            algorithm: auto
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        api_unsecure:
+            pattern: ^/api/(v1/user/register|doc)$
+            security: false
+        api:
+            pattern: ^/api/
+            stateless: true
+            guard:
+                authenticators:
+                    - App\Security\Oauth\OauthAuthenticator
+        app:
+            pattern: ^/
+            anonymous: ~
+            guard:
+                authenticators:
+                    - App\Security\LoginFormAuthenticator
+            logout:
+                path: app.logout
+
+    access_control:
+        # Special case which is not secure
+        - { path: ^/api/v1/user/register$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        # login should be not secure
+        - { path: ^/(login/|signup/|oauth/.*)$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        # Everything else should
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }

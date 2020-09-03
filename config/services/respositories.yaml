@@ -1,0 +1,20 @@
+services:
+    App\Orm\Oauth\ClientRepository:
+        factory: ['@doctrine.orm.entity_manager', 'getRepository']
+        arguments: ['App\Orm\Oauth\Client']
+
+    App\Orm\Oauth\AccessTokenRepository:
+        factory: ['@doctrine.orm.entity_manager', 'getRepository']
+        arguments: ['App\Orm\Oauth\AccessToken']
+
+    App\Orm\Oauth\RefreshTokenRepository:
+        factory: ['@doctrine.orm.entity_manager', 'getRepository']
+        arguments: ['App\Orm\Oauth\RefreshToken']
+
+    App\Orm\Repository\UserRepository:
+        factory: ['@doctrine.orm.entity_manager', 'getRepository']
+        arguments: ['App\Orm\Entity\User']
+
+    App\Orm\Oauth\AuthCodeRepository:
+        factory: ['@doctrine.orm.entity_manager', 'getRepository']
+        arguments: ['App\Orm\Oauth\AuthCode']
